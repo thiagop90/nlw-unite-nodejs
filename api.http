@@ -1,0 +1,34 @@
+POST http://localhost:3333/events
+Content-Type: application/json
+
+{
+  "title": 213413,
+  "details": null,
+  "maximumAttendees": 1
+}
+
+###
+
+POST http://localhost:3333/events/4be11c4f-f5e9-4f49-9e5b-7023d80f9392/attendees
+Content-Type: application/json
+
+{
+  "name": "Thiago Pereira",
+  "email": "thiago2@email.com"
+}
+
+###
+
+GET http://localhost:3333/events/869bf9bc-ea0e-43c7-ac44-b2d0a7b68fff
+
+###
+
+GET http://localhost:3333/attendees/3/badge
+
+###
+
+GET http://localhost:3333/attendees/5/check-in
+
+###
+
+GET http://localhost:3333/events/4be11c4f-f5e9-4f49-9e5b-7023d80f9392/attendees?query=
