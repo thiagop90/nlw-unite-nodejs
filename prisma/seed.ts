@@ -29,8 +29,7 @@ async function seed() {
   })
 
   const uniteSummitAttendees: Prisma.AttendeeUncheckedCreateInput[] = []
-
-  for (let i = 0; i <= 120; i++) {
+  for (let i = 0; i <= 119; i++) {
     uniteSummitAttendees.push({
       id: 10000 + i,
       name: faker.person.fullName(),
@@ -54,7 +53,7 @@ async function seed() {
   }
 
   const codeConAttendees: Prisma.AttendeeUncheckedCreateInput[] = []
-  for (let i = 0; i <= 150; i++) {
+  for (let i = 0; i <= 80; i++) {
     codeConAttendees.push({
       id: 20000 + i,
       name: faker.person.fullName(),
@@ -75,9 +74,21 @@ async function seed() {
     })
   }
 
-  await prisma.attendee.createMany({
-    data: [...uniteSummitAttendees, ...codeConAttendees],
-  })
+  await Promise.all(
+    uniteSummitAttendees.map((data) => {
+      return prisma.attendee.create({
+        data,
+      })
+    }),
+  )
+
+  await Promise.all(
+    codeConAttendees.map((data) => {
+      return prisma.attendee.create({
+        data,
+      })
+    }),
+  )
 }
 
 seed().then(() => {
