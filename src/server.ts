@@ -18,6 +18,7 @@ import { getEventAttendees } from './routes/get-event-attendees'
 import { errorHandler } from './error-handler'
 import { getEvents } from './routes/get-events'
 import { deleteEventAttendees } from './routes/delete-event-attendees'
+import { deleteEvent } from './routes/delete-event'
 
 export const app = fastify()
 
@@ -53,6 +54,7 @@ app.register(getEvent)
 app.register(getAttendeeBadge)
 app.register(checkIn)
 app.register(getEventAttendees)
+app.register(deleteEvent)
 app.register(deleteEventAttendees)
 
 app.setErrorHandler(errorHandler)

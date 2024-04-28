@@ -4,13 +4,12 @@ import { Prisma } from '@prisma/client'
 import dayjs from 'dayjs'
 
 async function seed() {
-  const eventId = '9e9bd979-9d10-4915-b339-3786b1634f33'
-
   await prisma.event.deleteMany()
 
+  const uniteSummitId = '9e9bd979-9d10-4915-b339-3786b1634f33'
   await prisma.event.create({
     data: {
-      id: eventId,
+      id: uniteSummitId,
       title: 'Unite Summit',
       slug: 'unite-summit',
       details: 'Um evento p/ devs apaixonados(as) por código!',
@@ -18,14 +17,25 @@ async function seed() {
     },
   })
 
-  const attendeesToInsert: Prisma.AttendeeUncheckedCreateInput[] = []
+  const codeConId = 'd4f0f5dc-79b0-4a12-a921-0b45744c6a3e'
+  await prisma.event.create({
+    data: {
+      id: codeConId,
+      title: 'CodeCon',
+      slug: 'code-con',
+      details: 'Conferência sobre codificação e desenvolvimento de software.',
+      maximumAttendees: 150,
+    },
+  })
+
+  const uniteSummitAttendees: Prisma.AttendeeUncheckedCreateInput[] = []
 
   for (let i = 0; i <= 120; i++) {
-    attendeesToInsert.push({
+    uniteSummitAttendees.push({
       id: 10000 + i,
       name: faker.person.fullName(),
       email: faker.internet.email(),
-      eventId,
+      eventId: uniteSummitId,
       createdAt: faker.date.recent({
         days: 30,
         refDate: dayjs().subtract(8, 'days').toDate(),
@@ -43,13 +53,31 @@ async function seed() {
     })
   }
 
-  await Promise.all(
-    attendeesToInsert.map((data) => {
-      return prisma.attendee.create({
-        data,
-      })
-    }),
-  )
+  const codeConAttendees: Prisma.AttendeeUncheckedCreateInput[] = []
+  for (let i = 0; i <= 150; i++) {
+    codeConAttendees.push({
+      id: 20000 + i,
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      eventId: codeConId,
+      createdAt: faker.date.recent({
+        days: 30,
+        refDate: dayjs().subtract(8, 'days').toDate(),
+      }),
+      checkIn: faker.helpers.arrayElement([
+        undefined,
+        {
+          create: {
+            createdAt: faker.date.recent({ days: 7 }),
+          },
+        },
+      ]),
+    })
+  }
+
+  await prisma.attendee.createMany({
+    data: [...uniteSummitAttendees, ...codeConAttendees],
+  })
 }
 
 seed().then(() => {
